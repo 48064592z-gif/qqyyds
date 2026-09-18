@@ -1,0 +1,21 @@
+checkUpdateBtn.onclick = async ()=>{
+  try{
+    const res = await fetch("https://cdn.jsdelivr.net/gh/48064592z-gif/qqyyds@main/cloudSongList.json");
+    const cloudSongArr = await res.json();
+
+    if(!confirm("确定拉取云端歌单，合并到本地收藏？")) return;
+
+    for(let s of cloudSongArr){
+      const isExists = favList.find(item=>item.url === s.url);
+      if(!isExists){
+        favList.push(s);
+      }
+    }
+    localStorage.setItem("favList", JSON.stringify(favList));
+    renderPlaylist();
+    alert("云端歌单同步完成！");
+  }catch(err){
+    alert("同步失败！刚上传请等待CDN缓存，检查json格式");
+    console.error(err);
+  }
+};
